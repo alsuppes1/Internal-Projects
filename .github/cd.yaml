@@ -1,0 +1,35 @@
+---
+name: 02 Azure Landing Zone Continuous Delivery
+on:
+  push:
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "**.md"
+      - .gitignore
+      - Gemfile
+      - .vscode/**
+      - bootstrap/**
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  plan_and_apply:
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [test, prod]
+    uses: MayerBrown/PlatformEng-Templates/.github/workflows/cd_template.yaml@main
+    name: "CD"
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
+      security-events: write
+    with:
+      environment: ${{ matrix.environment}}
+      lab_runner: ${{ matrix.environment == 'test' }}
+    secrets: inherit

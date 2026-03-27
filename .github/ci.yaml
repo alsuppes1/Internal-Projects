@@ -1,0 +1,53 @@
+---
+name: 01 Azure Landing Zone Continuous Integration
+on:
+  pull_request:
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "**.md"
+      - .gitignore
+      - Gemfile
+      - .vscode/**
+      - bootstrap/**
+      - .schemas/**
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate_and_plan:
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [test, prod]
+    uses: MayerBrown/PlatformEng-Templates/.github/workflows/ci_template.yaml@main
+    name: "CI"
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+      security-events: write
+      actions: read
+    with:
+      environment: ${{ matrix.environment }}
+      lab_runner: ${{ matrix.environment == 'test' }}
+    secrets: inherit
+
+  results:
+    if: ${{ always() }}
+    runs-on: ubuntu-slim
+    name: Final Results
+    needs: [validate_and_plan]
+    steps:
+      - run: |
+          result="${{ needs.validate_and_plan.result }}"
+          if [[ $result == "success" || $result == "skipped" ]]; then
+            exit 0
+          else
+            exit 1
+          fi

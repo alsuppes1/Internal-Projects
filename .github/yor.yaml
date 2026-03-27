@@ -1,0 +1,17 @@
+name: YOR Tagging
+on:
+  pull_request:
+    paths:
+      - "**.tf"
+    branches:
+      - main
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  checkov:
+    uses: MayerBrown/PlatformEng-Templates/.github/workflows/yor.yaml@main
+    name: "YOR Tagging"
+    permissions:
+      contents: write

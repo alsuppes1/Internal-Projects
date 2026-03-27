@@ -1,0 +1,25 @@
+name: checkov
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+  schedule:
+    - cron: '25 13 * * 3'
+
+jobs:
+  checkov:
+    uses: MayerBrown/PlatformEng-Templates/.github/workflows/checkov.yaml@main
+    name: "Checkov Scan"
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    secrets:
+      GH_TERRAFORM_ACTIONS_APP_PEM_FILE: ${{ secrets.GH_TERRAFORM_ACTIONS_APP_PEM_FILE }}
