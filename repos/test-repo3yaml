@@ -1,0 +1,5 @@
+name: test-repo-3
+description: "Test repository 3"
+has_issues: true
+has_wiki: false
+has_projects: false
