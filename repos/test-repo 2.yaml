@@ -1,0 +1,6 @@
+name: test-repo 2
+description: "Test repository 2"
+has_issues: true
+has_wiki: false
+has_projects: false
+prod_reviewer_team: alsuppes1
